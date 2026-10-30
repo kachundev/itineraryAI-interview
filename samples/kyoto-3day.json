@@ -1,0 +1,5 @@
+{
+  "destination": "Kyoto",
+  "dayCount": 3,
+  "preferences": ["temples", "food", "walkable neighborhoods"]
+}

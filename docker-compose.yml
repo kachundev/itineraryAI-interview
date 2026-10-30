@@ -1,0 +1,13 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      PORT: "8787"
+      GENERATE_TIMEOUT_MS: "45000"
+      # Pass through from host .env when present; leave empty for missing_api_key
+      # or set FIXTURE_MODE=1 for demo without a key.
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      XAI_MODEL: ${XAI_MODEL:-grok-4-1-fast-non-reasoning}
+      FIXTURE_MODE: ${FIXTURE_MODE:-0}

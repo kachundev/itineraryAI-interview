@@ -1,0 +1,103 @@
+{
+  "destination": "Kyoto",
+  "dayCount": 3,
+  "tripDescription": "A compact three-day Kyoto walk covering classic temples, quiet neighborhoods, and everyday meals.",
+  "days": [
+    {
+      "day": 1,
+      "title": "Higashiyama classics",
+      "activities": [
+        {
+          "timeOfDay": "morning",
+          "title": "Kiyomizu-dera",
+          "description": "Visit the wooden terrace early for views over the city before crowds build.",
+          "tips": "Wear shoes you can slip off at temple halls.",
+          "transport": "Bus to Gojozaka, then a short uphill walk."
+        },
+        {
+          "timeOfDay": "afternoon",
+          "title": "Sannenzaka & Ninenzaka",
+          "description": "Stroll the stone lanes between shops and small shrines toward Yasaka.",
+          "tips": "Keep cash handy for street snacks.",
+          "transport": "Walk downhill from Kiyomizu."
+        },
+        {
+          "timeOfDay": "evening",
+          "title": "Gion dusk walk",
+          "description": "Walk the quieter side streets near Shirakawa as lanterns come on.",
+          "tips": "Stay respectful around geisha photo spots.",
+          "transport": "Walk from Yasaka Shrine."
+        }
+      ],
+      "meals": {
+        "breakfast": "Cafe near your hotel",
+        "lunch": "Nishiki-adjacent noodles",
+        "dinner": "Kaiseki-light or izakaya in Gion"
+      }
+    },
+    {
+      "day": 2,
+      "title": "Arashiyama & west side",
+      "activities": [
+        {
+          "timeOfDay": "morning",
+          "title": "Bamboo grove & Tenryu-ji",
+          "description": "Pass through the bamboo path and the Zen temple garden while it is cooler.",
+          "tips": "Arrive close to opening to reduce crowding.",
+          "transport": "JR Sagano Line to Saga-Arashiyama."
+        },
+        {
+          "timeOfDay": "afternoon",
+          "title": "Riverbank & monkey park optional",
+          "description": "Walk the river or climb to the monkey park for a city overlook if energy remains.",
+          "tips": "Skip the park if rain makes the path slippery.",
+          "transport": "Walk within Arashiyama."
+        },
+        {
+          "timeOfDay": "evening",
+          "title": "Return via central Kyoto",
+          "description": "Head back toward downtown for an easy dinner and an early night.",
+          "tips": "Trains get busy after sunset; leave a buffer.",
+          "transport": "JR back toward Kyoto Station."
+        }
+      ],
+      "meals": {
+        "breakfast": "Hotel or station bakery",
+        "lunch": "Tofu or yudofu set near Tenryu-ji",
+        "dinner": "Casual ramen near Kyoto Station"
+      }
+    },
+    {
+      "day": 3,
+      "title": "North temples & farewell",
+      "activities": [
+        {
+          "timeOfDay": "morning",
+          "title": "Kinkaku-ji",
+          "description": "See the gold pavilion reflected in the pond, then continue to quieter grounds nearby.",
+          "tips": "Photos from the designated viewpoints only.",
+          "transport": "Bus from Kyoto Station area."
+        },
+        {
+          "timeOfDay": "afternoon",
+          "title": "Ryoan-ji rock garden",
+          "description": "Sit with the stone garden and keep the visit unhurried before packing up.",
+          "tips": "Silence phones inside the viewing hall.",
+          "transport": "Short bus or taxi hop from Kinkaku-ji."
+        },
+        {
+          "timeOfDay": "evening",
+          "title": "Last neighborhood stroll",
+          "description": "Pick souvenirs and a final walk near your hotel before departure.",
+          "tips": "Confirm luggage storage hours if you check out early.",
+          "transport": "Local bus or walk."
+        }
+      ],
+      "meals": {
+        "breakfast": "Hotel breakfast",
+        "lunch": "Set meal near Ryoan-ji",
+        "dinner": "Light dinner near the station"
+      }
+    }
+  ]
+}

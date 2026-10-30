@@ -1,0 +1,22 @@
+{
+  "name": "itineraryai-interview",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thin itinerary-generation slice for AI-assisted interview screening",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "test": "tsx --test tests/validate.test.ts tests/generate.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
