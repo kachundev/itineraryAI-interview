@@ -1,38 +1,44 @@
-# Itinerary Generator (interview slice)
+# Itinerary Generator (screening submission)
 
-A small TypeScript HTTP service that turns trip constraints into a **validated itinerary JSON**.
+Candidate work for an AI-assisted technical screen: I used AI tools to deliver a **small, runnable** TypeScript service and an explicit way to verify it.
 
-Built as a **thin slice** for an AI-assisted screening: one happy path, clear run instructions, and an explicit verification loop—not a full product dump.
+**What this proves:** I can direct AI under constraints, catch bad output with validation, and keep scope small enough for a reviewer to clone and check in minutes—not that I shipped a full travel product.
 
-Public repo target: [kachundev/itineraryAI-interview](https://github.com/kachundev/itineraryAI-interview)
+**Suggested review order (≈10 min):**
+1. `npm install && npm test` (no API key)
+2. [`AI_WORKFLOW.md`](./AI_WORKFLOW.md) — tools, steps, time, how I verified
+3. [`docs/architecture.md`](./docs/architecture.md) — one diagram
 
-## Why this project
+Repo: [kachundev/itineraryAI-interview](https://github.com/kachundev/itineraryAI-interview)
 
-Reviewers care about directing AI and checking output efficiently. This repo keeps only:
+## Why this slice
 
-- one request → one structured response
-- schema/validation as the acceptance gate
-- documented AI workflow and known limits
+I chose one vertical path—**trip constraints → validated itinerary JSON**—because it forces the hard parts of AI work (prompt limits, parse failures, timeouts) without a large UI or infra surface.
 
-It is **not** the production travel app (React + Supabase Edge + Vercel). That larger product inspired this slice; screening deliverable stays small on purpose.
+Deliberately cut: auth, database, ads, community, full web app. Inspired by a larger travel prototype; **this repo is the screening deliverable**.
 
 ## Requirements
 
 - Node.js 20+
-- An xAI API key (`XAI_API_KEY`) for **live** generation  
-  *(Fixture / `npm test` works without a key.)*
+- **No API key needed** for the default check (`npm test`)
+- Optional: `XAI_API_KEY` for live generation; Docker / Compose for containerized run
 
-Optional: Docker / Docker Compose.
-
-## Run in 5 minutes
+## Verify first (no API key)
 
 ```bash
-cp .env.example .env   # set XAI_API_KEY if you want live calls
 npm install
-npm start
+npm test
 ```
 
-Happy path (live key required unless `FIXTURE_MODE=1`):
+Expected: all tests pass (schema, happy fixture path, invalid input → `invalid_input`).
+
+## Optional: run the server
+
+```bash
+cp .env.example .env
+# leave XAI_API_KEY empty and use fixture mode, or set a key for live calls
+FIXTURE_MODE=1 npm start
+```
 
 ```bash
 curl -s localhost:8787/generate \
@@ -40,24 +46,13 @@ curl -s localhost:8787/generate \
   -d @samples/kyoto-3day.json | jq .
 ```
 
-Without a live key, verify the contract:
+With a real `XAI_API_KEY` in `.env`, omit `FIXTURE_MODE` for live generation.
 
-```bash
-npm test
-```
-
-Demo without a key (optional):
-
-```bash
-FIXTURE_MODE=1 npm start
-# same curl — returns fixtures/kyoto-3day-response.json shaped output
-```
-
-### Docker
+### Docker (optional)
 
 ```bash
 docker compose up --build
-# then the same curl against localhost:8787
+# same curl against localhost:8787
 ```
 
 ## API
@@ -65,7 +60,7 @@ docker compose up --build
 | Method | Path | Notes |
 |---|---|---|
 | `GET` | `/health` | `{ "ok": true }` |
-| `POST` | `/generate` | Trip JSON in → itinerary JSON or typed error |
+| `POST` | `/generate` | Trip JSON → itinerary JSON or typed error |
 
 **Request**
 
@@ -77,9 +72,39 @@ docker compose up --build
 }
 ```
 
-`preferences` is optional (string or string array). `dayCount` must be an integer 1–14.
+`preferences` is optional. `dayCount` is an integer 1–14.
 
-**Success (200)** — itinerary object with `destination`, `dayCount`, `tripDescription`, `days[]` (each day has morning/afternoon/evening activities; meals soft-filled).
+**Success (200)** — abbreviated example:
+
+```json
+{
+  "destination": "Kyoto",
+  "dayCount": 3,
+  "tripDescription": "A compact three-day Kyoto walk…",
+  "days": [
+    {
+      "day": 1,
+      "title": "Higashiyama classics",
+      "activities": [
+        {
+          "timeOfDay": "morning",
+          "title": "Kiyomizu-dera",
+          "description": "Visit the wooden terrace early…",
+          "tips": "Wear shoes you can slip off…",
+          "transport": "Bus to Gojozaka…"
+        }
+      ],
+      "meals": {
+        "breakfast": "Cafe near your hotel",
+        "lunch": "Nishiki-adjacent noodles",
+        "dinner": "Kaiseki-light or izakaya in Gion"
+      }
+    }
+  ]
+}
+```
+
+Full golden shape: `fixtures/kyoto-3day-response.json`.
 
 **Errors**
 
@@ -94,46 +119,24 @@ docker compose up --build
 ## Layout
 
 ```
-src/            # HTTP handler, prompt Limits, xAI call, parse/validate
-samples/        # example request body
-fixtures/       # golden Kyoto response (tests + FIXTURE_MODE)
-tests/          # schema + error-path checks (no API key required)
-docs/           # architecture (mermaid)
-AI_WORKFLOW.md  # tools, steps, time, how we verified
+src/              HTTP handler, prompt Limits, xAI, parse/validate
+samples/          example request
+fixtures/         golden Kyoto response (tests + FIXTURE_MODE)
+tests/            no API key required
+docs/             architecture (mermaid)
+AI_WORKFLOW.md    tools, steps, time, verification
 ```
 
 ## Known limits
 
-- Upstream call is aborted around **45s**; long prompts increase timeout risk.
-- Activity copy is kept to **short sentences** on purpose (latency vs richness trade-off).
-- Model output can refuse or return unparsable text; those map to explicit error codes.
-- This slice does **not** include auth, database persistence, ads, community, or the full web UI.
+- Upstream abort ~**45s**; longer prompts raise timeout risk.
+- Activity copy stays **short sentences** on purpose (latency vs richness).
+- Model refusals / unparsable text map to stable error codes—not a half response.
+- No auth, persistence, or full UI in this submission.
 
-## How to verify
+## How I checked “good enough”
 
-1. `npm test` — fixture/schema path passes (no API key).
-2. Live: Kyoto 3-day sample returns HTTP 200 and JSON with `days.length === 3`.
-3. Bad input (missing destination / invalid `dayCount`) returns `invalid_input` with 400.
-4. Compare one live response against the field checklist in `AI_WORKFLOW.md`.
-
-## Pushing this folder to GitHub
-
-If you received this directory (or zip) to upload yourself to an empty-ish public repo:
-
-```bash
-cd itineraryAI-interview
-git init
-git add .
-git commit -m "Initial interview slice: generate path + docs + fixture tests"
-git branch -M main
-git remote add origin https://github.com/kachundev/itineraryAI-interview.git
-# If GitHub already has a stub README, pull/rebase or allow unrelated histories once:
-# git pull origin main --allow-unrelated-histories
-git push -u origin main
-```
-
-Do **not** point this remote at the production `ItineraryAI` repo.
-
-## Note on scope
-
-The production app is larger. This submission deliberately freezes a **single vertical slice** so reviewers can clone, run, and judge the AI workflow without wading through product history.
+1. `npm test` green without a key  
+2. Live (optional): Kyoto 3-day → 200 and `days.length === 3`  
+3. Bad input → `invalid_input` / 400  
+4. Spot-check fields against the checklist in `AI_WORKFLOW.md`
